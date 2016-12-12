@@ -9,6 +9,11 @@ It is not meant to be comprehensive. Instead, it provides a high-level interface
 to certain many of the common reporting queries, and allows you to do construct other queries
 closer to the metal.
 
+## My addition
+
+Proxy support (needed for work)
+Timeout support (wifi at work is no good and sometimes makes the application wait for response endlessly)
+
 ## Installation
 
 Through PyPI (older version):
