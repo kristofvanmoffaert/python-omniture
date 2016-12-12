@@ -12,6 +12,7 @@ closer to the metal.
 ## My addition
 
 Proxy support (needed for work)
+
 Timeout support (wifi at work is no good and sometimes makes the application wait for response endlessly)
 
 ## Installation
