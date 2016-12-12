@@ -22,7 +22,7 @@ class Account(object):
     """ A wrapper for the Adobe Analytics API. Allows you to query the reporting API """
     DEFAULT_ENDPOINT = 'https://api.omniture.com/admin/1.4/rest/'
 
-    def __init__(self, username, secret, endpoint=DEFAULT_ENDPOINT, cache=False, cache_key=None):
+    def __init__(self, username, secret, endpoint=DEFAULT_ENDPOINT, cache=False, cache_key=None, proxies=None, timeout=10):
         """Authentication to make requests."""
         self.log = logging.getLogger(__name__)
         self.log.info(datetime.now().strftime("%Y-%m-%d %I%p:%M:%S"))
@@ -30,6 +30,9 @@ class Account(object):
         self.secret = secret
         self.endpoint = endpoint
         #Allow someone to set a custom cache key
+        self.timeout = timeout
+        if proxies:
+            self.proxies= proxies
         self.cache = cache
         if cache_key:
             self.cache_key = cache_key
@@ -86,12 +89,24 @@ class Account(object):
             like to pass to the API
         """
         self.log.info("Request: %s.%s  Parameters: %s", api, method, query)
-        response = requests.post(
-            self.endpoint,
-            params={'method': api + '.' + method},
-            data=json.dumps(query),
-            headers=self._build_token()
-            )
+        if self.proxies:
+			response = requests.post(
+                self.endpoint,
+                params={'method': api + '.' + method},
+                data=json.dumps(query),
+                headers=self._build_token(),
+                proxies = self.proxies,
+                verify=False,
+                timeout = self.timeout
+                )
+        else:
+			response = requests.post(
+				self.endpoint,
+                params={'method': api + '.' + method},
+                data=json.dumps(query),
+                headers=self._build_token(),
+				timeout = self.timeout
+                )
         self.log.debug("Response for %s.%s:%s", api, method, response.text)
         json_response = response.json()
 
